@@ -1,0 +1,10 @@
+config FSL_DPAA_ETH_IM
+	tristate "DPAA Ethernet with independent mode"
+	depends on ARCH_LAYERSCAPE
+	depends on !FSL_SDK_DPA
+	---help---
+	  Data Path Acceleration Architecture Ethernet independent
+	  mode driver supporting the Freescale QorIQ chips with
+	  DPAA1.
+	  This is DPAA simplified ethernet driver, target for debug
+	  only, not for product.

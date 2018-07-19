@@ -1,0 +1,50 @@
+Dpaa-im:
+  Dpaa-im is an Ethernet driver using Dpaa Fman to implement in independent mode.
+
+Dependence:
+  1. All the DPAA drivers should be disabled in kernel configuration file, the list as below:
+
+	CONFIG_FSL_SDK_DPA
+	CONFIG_FSL_SDK_FMAN
+	CONFIG_FSL_SDK_DPAA_ETH
+	CONFIG_FSL_DPAA
+	CONFIG_FSL_FMAN
+	CONFIG_FSL_DPAA_ETH
+
+  2. Linux should be built before building dpaa-im
+  3. Dpaa-im is based on linux-4.9 and linux-4.14 of LSDK release
+
+Building:
+  To build dpaa-im as a module
+
+	cd dpaa-im
+	make build KERNEL_DIR=<path-to-linux> ARCH=arm64 CROSS_COMPILE=<arm64-toolchain>
+	e.g. make build KERNEL_DIR=~/linux ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+
+  after building, you will see module file "dpaa_eth_im.ko"
+  In addition, use "make clean KERNEL_DIR=<path-to-linux> ARCH=arm64 CROSS_COMPILE=<arm64-toolchain>" to clean
+ 
+Using:
+  1. Fman firmware should be loaded in uboot.
+  2. Boot up linux.
+  3. In linux, run command "insmod dpaa_eth_im.ko", kernel will print:
+
+	[    0.535089] fman_im: QorIQ FMAN Independent Mode Ethernet Driver loaded
+	[    0.541782] DEV: FM1@DTSEC3, DTS Node: fsl,dpaa:ethernet@6
+
+  4. Run command "ifconfig -a", dpaa-im ethernet(FM1@DTSEC3) could be saw, then use it as normal ethernet.
+
+	FM1@DTSEC3 Link encap:Ethernet  HWaddr 00:e0:0c:00:77:00
+		  BROADCAST MULTICAST  MTU:1500  Metric:1
+		  RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+		  TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+		  collisions:0 txqueuelen:1000
+		  RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+	lo        Link encap:Local Loopback
+		  inet addr:127.0.0.1  Mask:255.0.0.0
+		  inet6 addr: ::1/128 Scope:Host
+		  UP LOOPBACK RUNNING  MTU:65536  Metric:1
+		  RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+		  TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+		  collisions:0 txqueuelen:0
+		  RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
